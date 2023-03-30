@@ -22,15 +22,12 @@ VOLTTRON historian agent that stores data into a PostgreSQL database
 
 PostgreSQL historian supports two configuration parameters
     
-    - connection -  This is a mandatory parameter with type indicating the type of sql historian (i.e. postgresql) and  
-                    params containing the database access details
-    
-    - tables_def - Optional parameter to provide custom table names for topics, data, and metadata.
+   - connection -  This is a mandatory parameter with type indicating the type of sql historian (i.e. postgresql) and params containing the database access details
+   - tables_def - Optional parameter to provide custom table names for topics, data, and metadata.
     
 The configuration can be in a json or yaml formatted file. The following examples show minimal connection 
-configurations for a psycopg2-based historian. Other options are available and are 
-[documented here](https://www.psycopg.org/docs/module.html#psycopg2.connect) **Not all parameters have been tested, 
-use at your own risk**.
+configurations for a psycopg2-based historian. Other options are available and are [documented here](https://www.psycopg.org/docs/module.html#psycopg2.connect) 
+**Not all parameters have been tested,  use at your own risk**.
 
 #### Local PostgreSQL Database
 
@@ -136,14 +133,14 @@ add \'timescale_dialect: true\' to the connection params in the agent config as 
    a user with appropriate permissions. This way the database user used by the historian need not have CREATE privileges
    Postgres historian expects two tables 
    a. A topics tables that stores the list of unique topics and its metadata. The default name is "topics". If you use 
-      a different name please specify it as part of "tables_def" configuration parameter in agent config. See (#Yaml-Format)
+      a different name please specify it as part of "tables_def" configuration parameter in agent config. See [example configuration](#Yaml-Format)
    b. A data table that stores the timeseries data and refers to the topic table using a topic id. The default name is 
       "data". If you use a different name please specify it as part of "tables_def" configuration parameter in 
-      agent config. See (#Yaml-Format)
+      agent config. See [example configuration](#Yaml-Format)
 
    Below are the sql statements to create database and tables
    <u>Create Database</u>
-   ```
+    ```
        CREATE DATABASE volttron
     ```
    <u>TOPICS tables:</u>
@@ -155,8 +152,7 @@ add \'timescale_dialect: true\' to the connection params in the agent config as 
             UNIQUE (topic_name)
        )
     ```
-    
-       <u>DATA table:</u>
+    <u>DATA table:</u>
     ```
        CREATE TABLE IF NOT EXISTS data (
            ts TIMESTAMP NOT NULL, 
@@ -165,16 +161,16 @@ add \'timescale_dialect: true\' to the connection params in the agent config as 
            UNIQUE (topic_id, ts)
        )
     ```
-       <u>Optional timescale hypertable</u>
+     <u>Optional timescale hypertable</u>
     ```
        SELECT create_hypertable(data, 'ts', if_not_exists => true)
     ```
-       <u>Create index to speed up data access</u>
+     <u>Create index to speed up data access</u>
        If using hypertables:
     ```
         CREATE INDEX IF NOT EXISTS idx_data ON data (topic_id, ts)
     ```
-       If not using hypertables:
+      If not using hypertables:
     ```
         CREATE INDEX IF NOT EXISTS idx_data ON data (ts ASC)
     ```
@@ -190,7 +186,7 @@ add \'timescale_dialect: true\' to the connection params in the agent config as 
 
 4. Create an agent configuration file 
 
-    Create an agent configuration with appropriate connection parameters as described in [Configurations section](#Configuration)
+    Create an agent configuration with appropriate connection parameters as described in the [Configurations section](#Configuration)
 
 5. Install and start the volttron-postgresql-historian.
 
