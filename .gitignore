@@ -1,0 +1,6 @@
+/dev/poetry.lock
+/.venv/
+/poetry.lock
+/docs/build/
+/dev/.venv/
+/.idea/
