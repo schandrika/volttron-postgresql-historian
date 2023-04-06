@@ -22,11 +22,9 @@
 # ===----------------------------------------------------------------------===
 # }}}
 
-import os
+
 from pathlib import Path
-import shutil
 import sys
-import tempfile
 
 import pytest
 from volttrontesting.fixtures.volttron_platform_fixtures import volttron_instance
