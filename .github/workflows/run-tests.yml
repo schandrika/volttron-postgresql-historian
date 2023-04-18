@@ -48,6 +48,17 @@ jobs:
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
 
+      #------------------
+      # setup database
+      #----------------
+      - run: |
+          apt-get update
+          apt-get install --yes --no-install-recommends postgresql-client
+      - run: |
+          psql -h localhost -U postgres -c "CREATE DATABASE test_historian;"
+          psql -h localhost -U postgres -c "CREATE USER historian with encrypted password 'historian';"
+          psql -h localhost -U postgres -c "GRANT ALL PRIVILEGES on database test_historian to historian;"
+
       #----------------------------------------------
       #       check-out repo and set-up python
       #----------------------------------------------
