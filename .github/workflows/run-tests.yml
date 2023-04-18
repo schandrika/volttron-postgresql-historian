@@ -28,12 +28,8 @@ env:
 jobs:
 
   run-tests:
-    strategy:
-      matrix:
-        os: ["ubuntu-20.04", "ubuntu-22.04"]
-        python: ["3.8", "3.9", "3.10"]
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-22.04
 
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
