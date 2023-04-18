@@ -52,9 +52,6 @@ jobs:
       # setup database
       #----------------
       - run: |
-          apt-get update
-          apt-get install --yes --no-install-recommends postgresql-client
-      - run: |
           psql -h localhost -U postgres -c "CREATE DATABASE test_historian;"
           psql -h localhost -U postgres -c "CREATE USER historian with encrypted password 'historian';"
           psql -h localhost -U postgres -c "GRANT ALL PRIVILEGES on database test_historian to historian;"
