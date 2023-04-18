@@ -133,10 +133,10 @@ add \'timescale_dialect: true\' to the connection params in the agent config as 
    a user with appropriate permissions. This way the database user used by the historian need not have CREATE privileges
    Postgres historian expects two tables 
    a. A topics tables that stores the list of unique topics and its metadata. The default name is "topics". If you use 
-      a different name please specify it as part of "tables_def" configuration parameter in agent config. See [example configuration](#Yaml-Format)
+      a different name please specify it as part of "tables_def" configuration parameter in agent config. See [example configuration](#yaml-format)
    b. A data table that stores the timeseries data and refers to the topic table using a topic id. The default name is 
       "data". If you use a different name please specify it as part of "tables_def" configuration parameter in 
-      agent config. See [example configuration](#Yaml-Format)
+      agent config. See [example configuration](#yaml-format)
 
    Below are the sql statements to create database and tables
    <u>Create Database</u>
