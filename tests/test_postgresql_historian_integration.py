@@ -74,7 +74,7 @@ class TestPostgresqlIntegration(HistorianTestInterface):
         if volttron_instance.is_running() and volttron_instance.is_agent_running(historian_uuid):
             volttron_instance.stop_agent(historian_uuid)
         volttron_instance.remove_agent(historian_uuid)
-        gevent.sleep(1)
+        gevent.sleep(5)
 
     def setup_db(self, connection_params, table_names, historian_version):
         self.db_connection = psycopg2.connect(**connection_params)
@@ -112,6 +112,7 @@ class TestPostgresqlIntegration(HistorianTestInterface):
                 'metadata TEXT NOT NULL'
                 ')').format(Identifier(table_names['meta_table'])))
             self.db_connection.commit()
+            gevent.sleep(5)
 
     def cleanup_tables(self, truncate_tables, drop_tables=False):
         cursor = self.db_connection.cursor()

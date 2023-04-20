@@ -168,6 +168,7 @@ class PostgreSqlFuncts(DbDriver):
                 # metadata is in topics table
                 self.meta_table = self.topics_table
         else:
+            _log.debug("Creating topic and data tables")
             self.execute_stmt(SQL(
                 'CREATE TABLE IF NOT EXISTS {} ('
                     'ts TIMESTAMP NOT NULL, '
@@ -222,51 +223,55 @@ class PostgreSqlFuncts(DbDriver):
     def query(self, topic_ids, id_name_map, start=None, end=None, skip=0,
               agg_type=None, agg_period=None, count=None,
               order='FIRST_TO_LAST'):
-        if agg_type and agg_period:
-            table_name = agg_type + '_' + agg_period
-            value_col = 'agg_value'
-        else:
-            table_name = self.data_table
-            value_col = 'value_string'
+        try:
+            if agg_type and agg_period:
+                table_name = agg_type + '_' + agg_period
+                value_col = 'agg_value'
+            else:
+                table_name = self.data_table
+                value_col = 'value_string'
 
-        topic_id = Literal(0)
-        query = [SQL(
-            '''SELECT to_char(ts, 'YYYY-MM-DD"T"HH24:MI:SS.USOF:00'), ''' + value_col + ' \n'
-            'FROM {}\n'
-            'WHERE topic_id = {}'
-        ).format(Identifier(table_name), topic_id)]
-        if start and start.tzinfo != pytz.UTC:
-            start = start.astimezone(pytz.UTC)
-        if end and end.tzinfo != pytz.UTC:
-            end = end.astimezone(pytz.UTC)
-        if start and start == end:
-            query.append(SQL(' AND ts = {}').format(Literal(start)))
-        else:
-            if start:
-                query.append(SQL(' AND ts >= {}').format(Literal(start)))
-            if end:
-                query.append(SQL(' AND ts < {}').format(Literal(end)))
-        query.append(SQL('ORDER BY ts {}'.format(
-            'DESC' if order == 'LAST_TO_FIRST' else 'ASC')))
-        if skip or count:
-            query.append(SQL('LIMIT {} OFFSET {}').format(
-                Literal(None if not count or count < 0 else count),
-                Literal(None if not skip or skip < 0 else skip)))
-        query = SQL('\n').join(query)
-        values = {}
-        if value_col == 'agg_value':
-            for topic_id._wrapped in topic_ids:
-                name = id_name_map[topic_id.wrapped]
-                with self.select(query, fetch_all=False) as cursor:
-                    values[name] = [(ts, value)
-                                    for ts, value in cursor]
-        else:
-            for topic_id._wrapped in topic_ids:
-                name = id_name_map[topic_id.wrapped]
-                with self.select(query, fetch_all=False) as cursor:
-                    values[name] = [(ts, jsonapi.loads(value))
-                                    for ts, value in cursor]
-        return values
+            topic_id = Literal(0)
+            query = [SQL(
+                '''SELECT to_char(ts, 'YYYY-MM-DD"T"HH24:MI:SS.USOF:00'), ''' + value_col + ' \n'
+                'FROM {}\n'
+                'WHERE topic_id = {}'
+            ).format(Identifier(table_name), topic_id)]
+            if start and start.tzinfo != pytz.UTC:
+                start = start.astimezone(pytz.UTC)
+            if end and end.tzinfo != pytz.UTC:
+                end = end.astimezone(pytz.UTC)
+            if start and start == end:
+                query.append(SQL(' AND ts = {}').format(Literal(start)))
+            else:
+                if start:
+                    query.append(SQL(' AND ts >= {}').format(Literal(start)))
+                if end:
+                    query.append(SQL(' AND ts < {}').format(Literal(end)))
+            query.append(SQL('ORDER BY ts {}'.format(
+                'DESC' if order == 'LAST_TO_FIRST' else 'ASC')))
+            if skip or count:
+                query.append(SQL('LIMIT {} OFFSET {}').format(
+                    Literal(None if not count or count < 0 else count),
+                    Literal(None if not skip or skip < 0 else skip)))
+            query = SQL('\n').join(query)
+            values = {}
+            if value_col == 'agg_value':
+                for topic_id._wrapped in topic_ids:
+                    name = id_name_map[topic_id.wrapped]
+                    with self.select(query, fetch_all=False) as cursor:
+                        values[name] = [(ts, value)
+                                        for ts, value in cursor]
+            else:
+                for topic_id._wrapped in topic_ids:
+                    name = id_name_map[topic_id.wrapped]
+                    with self.select(query, fetch_all=False) as cursor:
+                        values[name] = [(ts, jsonapi.loads(value))
+                                        for ts, value in cursor]
+            _log.debug(f"Returning values: {values}")
+            return values
+        except BaseException as e:
+            _log.error(f"Got exception while query {e}")
 
     def insert_topic(self, topic, **kwargs):
         meta = kwargs.get('metadata')
