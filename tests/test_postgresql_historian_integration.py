@@ -48,8 +48,8 @@ class TestPostgresqlIntegration(HistorianTestInterface):
                     'dbname': 'test_historian',
                     'port': 5432,
                     'host': 'localhost',
-                    'user': 'historian',
-                    'password': 'historian'
+                    'user': 'postgres',
+                    'password': 'postgres'
                 }
             }
         }
