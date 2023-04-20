@@ -103,4 +103,4 @@ jobs:
         run: |
           poetry install --no-interaction
           poetry add --group dev pytest-github-actions-annotate-failures
-          poetry run pytest -x --cov=src tests/test_postgresql_historian_integration.py
+          poetry run pytest tests/test_postgresql_historian_integration.py
