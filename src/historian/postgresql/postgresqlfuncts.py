@@ -51,22 +51,25 @@ For method details please refer to base class
 
 class PostgreSqlFuncts(DbDriver):
     def __init__(self, connect_params, table_names):
-        self.db_name = connect_params.get('dbname')
-        if not self.db_name:
-            raise ValueError("Connection parameter does not include the parameter 'db_name'")
-        if table_names:
-            self.data_table = table_names['data_table']
-            self.topics_table = table_names['topics_table']
-            self.meta_table = table_names['meta_table']
-            self.agg_topics_table = table_names.get('agg_topics_table')
-            self.agg_meta_table = table_names.get('agg_meta_table')
-        connect_params = copy.deepcopy(connect_params)
-        if "timescale_dialect" in connect_params:
-            self.timescale_dialect = connect_params.get("timescale_dialect", False)
-            del connect_params["timescale_dialect"]
-        else:
-            self.timescale_dialect = False
-        _log.debug(f"init of postgres functs. connection params is {connect_params}")
+        try:
+            self.db_name = connect_params.get('dbname')
+            if not self.db_name:
+                raise ValueError("Connection parameter does not include the parameter 'db_name'")
+            if table_names:
+                self.data_table = table_names['data_table']
+                self.topics_table = table_names['topics_table']
+                self.meta_table = table_names['meta_table']
+                self.agg_topics_table = table_names.get('agg_topics_table')
+                self.agg_meta_table = table_names.get('agg_meta_table')
+            connect_params = copy.deepcopy(connect_params)
+            if "timescale_dialect" in connect_params:
+                self.timescale_dialect = connect_params.get("timescale_dialect", False)
+                del connect_params["timescale_dialect"]
+            else:
+                self.timescale_dialect = False
+            _log.debug(f"init of postgres functs. connection params is {connect_params}")
+        except BaseException as e:
+            _log.error(f"Exception in init of postgres with {connect_params} : {e}")
 
         def connect():
             connection = psycopg2.connect(**connect_params)
