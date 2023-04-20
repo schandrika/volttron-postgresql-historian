@@ -21,6 +21,7 @@
 #
 # ===----------------------------------------------------------------------===
 # }}}
+import os
 
 import gevent
 import pytest
@@ -41,6 +42,11 @@ class TestPostgresqlIntegration(HistorianTestInterface):
 
     @pytest.fixture(scope="module")
     def historian(self, volttron_instance):
+        user = 'historian'
+        password = 'historian'
+        if os.environ['GITHUB_ACTIONS']:
+            user = 'postgres'
+            password = 'postgres'
         historian_config = {
             "connection": {
                 "type": "postgresql",
@@ -48,8 +54,8 @@ class TestPostgresqlIntegration(HistorianTestInterface):
                     'dbname': 'test_historian',
                     'port': 5432,
                     'host': 'localhost',
-                    'user': 'postgres',
-                    'password': 'postgres'
+                    'user': user,
+                    'password': password
                 }
             }
         }
