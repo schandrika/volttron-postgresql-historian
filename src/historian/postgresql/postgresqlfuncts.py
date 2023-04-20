@@ -66,6 +66,7 @@ class PostgreSqlFuncts(DbDriver):
             del connect_params["timescale_dialect"]
         else:
             self.timescale_dialect = False
+        _log.debug(f"init of postgres functs. connection params is {connect_params}")
 
         def connect():
             connection = psycopg2.connect(**connect_params)
