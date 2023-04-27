@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "volttron-postgresql-historian"
-version = "0.1.0-rc0"
+version = "0.1.0"
 description = "VOLTTRON historian agent that stores data in a PostgreSQL database. It extends the SQLHistorian class."
 authors = ["VOLTTRON Team <volttron@pnnl.gov>"]
 license = "Apache License 2.0"
@@ -11,7 +11,7 @@ keywords = []
 packages = [ { include = "historian", from = "src" } ]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<4.0"
+python = ">=3.9,<3.10"
 volttron-lib-sql-historian="^0.2.0rc0"
 psycopg2-binary = "^2.9.5"
 
