@@ -14,6 +14,9 @@ on:
       - reopened
     paths:
       - '**.py'
+      - '**.yaml'
+      - '**.yml'
+      - '**.toml'
 
 defaults:
   run:
@@ -29,8 +32,12 @@ env:
 jobs:
 
   run-tests:
+    strategy:
+      matrix:
+        os: [ "ubuntu-22.04" ]
+        python: [ "3.10", "3.11" ]
 
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
 
     services:
       # Label used to access the service container
@@ -67,7 +74,6 @@ jobs:
       - name: Install Poetry
         uses: snok/install-poetry@v1
         with:
-          version: 1.2.2
           virtualenvs-create: true
           virtualenvs-in-project: true
           installer-parallel: true
@@ -79,22 +85,6 @@ jobs:
           psql -h localhost -U postgres -c "CREATE DATABASE test_historian;"
           psql -h localhost -U postgres -c "CREATE USER historian with encrypted password 'historian';"
           psql -h localhost -U postgres -c "GRANT ALL PRIVILEGES on database test_historian to historian;"
-
-#      #----------------------------------------------
-#      #       load cached venv if cache exists
-#      #----------------------------------------------
-#      - name: Load cached venv
-#        id: cached-poetry-dependencies
-#        uses: actions/cache@v2.1.7
-#        with:
-#          path: .venv
-#          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-#      #----------------------------------------------
-#      # install dependencies if cache does not exist
-#      #----------------------------------------------
-#      - name: Install dependencies
-#        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-#        run: poetry install --no-interaction --no-root
 
       #----------------------------------------------
       # install your root project, and run tests.
