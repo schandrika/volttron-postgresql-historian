@@ -1,5 +1,9 @@
+[![Eclipse VOLTTRON™](https://img.shields.io/badge/Eclips%20VOLTTRON--red.svg)](https://volttron.readthedocs.io/en/latest/)
+![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)
+![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)
 [![Run Pytests](https://github.com/eclipse-volttron/volttron-postgresql-historian/actions/workflows/run-test.yml/badge.svg)](https://github.com/eclipse-volttron/volttron-postgresql-historian/actions/workflows/run-test.yml)
 [![pypi version](https://img.shields.io/pypi/v/volttron-postgresql-historian.svg)](https://pypi.org/project/volttron-postgresql-historian/)
+![Passing?](https://github.com/VOLTTRON/volttron-postgresql-historian/actions/workflows/run-tests.yml/badge.svg)
 
 VOLTTRON historian agent that stores data into a PostgreSQL database
 
@@ -106,7 +110,7 @@ add \'timescale_dialect: true\' to the connection params in the agent config as 
 
 ## Requirements
 
- - Python >= 3.8
+ - Python >= 3.10
  - psycopg2 library
 
 ## Installation
@@ -133,10 +137,10 @@ add \'timescale_dialect: true\' to the connection params in the agent config as 
    a user with appropriate permissions. This way the database user used by the historian need not have CREATE privileges
    Postgres historian expects two tables 
    a. A topics tables that stores the list of unique topics and its metadata. The default name is "topics". If you use 
-      a different name please specify it as part of "tables_def" configuration parameter in agent config. See [example configuration](#Yaml-Format)
+      a different name please specify it as part of "tables_def" configuration parameter in agent config. See [example configuration](#yaml-format)
    b. A data table that stores the timeseries data and refers to the topic table using a topic id. The default name is 
       "data". If you use a different name please specify it as part of "tables_def" configuration parameter in 
-      agent config. See [example configuration](#Yaml-Format)
+      agent config. See [example configuration](#yaml-format)
 
    Below are the sql statements to create database and tables
    <u>Create Database</u>
