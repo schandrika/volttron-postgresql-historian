@@ -85,8 +85,8 @@ class PostgreSqlFuncts(DbDriver):
     def bulk_insert(self):
         """
         This function implements the bulk insert requirements for postgresql historian by overriding the
-        DbDriver::bulk_insert() in basedb.py and yields necessary data insertion method needed for bulk inserts
-
+        DbDriver::bulk_insert() in basedb.py and yields necessary data insertion method needed for bulk inserts.
+        tEST
         :yields: insert method
         """
         records = []
