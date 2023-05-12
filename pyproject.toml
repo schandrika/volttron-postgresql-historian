@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "volttron-postgresql-historian"
-version = "0.1.0-rc0"
+version = "0.1.0"
 description = "VOLTTRON historian agent that stores data in a PostgreSQL database. It extends the SQLHistorian class."
 authors = ["VOLTTRON Team <volttron@pnnl.gov>"]
 license = "Apache License 2.0"
@@ -12,7 +12,7 @@ packages = [ { include = "historian", from = "src" } ]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
-volttron-lib-sql-historian="^0.2.0rc0"
+volttron-lib-sql-historian="^0.1.1a8"
 psycopg2-binary = "^2.9.5"
 
 [tool.poetry.group.dev.dependencies]
@@ -27,9 +27,9 @@ safety = "^1.10.3"
 mypy = "^0.942"
 coverage = "^6.3.2"
 pytest-cov = "^3.0.0"
-Sphinx = "^4.5.0"
-sphinx-rtd-theme = "^1.0.0"
-volttron-testing = "^0.4.0rc1"
+Sphinx = "^6.0.0"
+sphinx-rtd-theme = "^1.2.0"
+volttron-testing = "^0.4.0rc3"
 
 [tool.yapfignore]
 ignore_patterns = [
@@ -49,5 +49,5 @@ split_before_logical_operator = true
 volttron-postgresql-historian = "historian.sql.historian:main"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"
