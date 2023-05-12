@@ -43,17 +43,39 @@ env:
 
 jobs:
   call-deploy-release:
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+          -
     permissions:
       contents: write  # To push a branch
       pull-requests: write  # To create a PR from that branch
 
-    uses: eclipse-volttron/github-tooling/.github/workflows/deploy-release.yml@main
-    with:
-      merge-strategy: ${{ inputs.merge-strategy }}
-      release-version: ${{ inputs.release-version }}
-      bump-rule: ${{ inputs.bump-rule }}
-      run-tests-wait: 600
-      publish-to-test-pypi: false
-    secrets:
-      git-token: ${{ secrets.AUTO_PROJECT_PAT }}
-      pypi-token: ${{ secrets.PYPI_TOKEN }}
+    steps:
+      #------------------
+      # setup database
+      #----------------
+      - run: |
+          psql -h localhost -U postgres -c "CREATE DATABASE test_historian;"
+          psql -h localhost -U postgres -c "CREATE USER historian with encrypted password 'historian';"
+          psql -h localhost -U postgres -c "GRANT ALL PRIVILEGES on database test_historian to historian;"
+
+      - name: Call reusable make-release workflow
+        uses: eclipse-volttron/github-tooling/.github/workflows/deploy-release.yml@main
+        with:
+          merge-strategy: ${{ inputs.merge-strategy }}
+          release-version: ${{ inputs.release-version }}
+          bump-rule: ${{ inputs.bump-rule }}
+          run-tests-wait: 600
+          publish-to-test-pypi: false
+        secrets:
+          git-token: ${{ secrets.AUTO_PROJECT_PAT }}
+          pypi-token: ${{ secrets.PYPI_TOKEN }}
