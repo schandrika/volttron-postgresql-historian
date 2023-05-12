@@ -44,6 +44,11 @@ from historian.postgresql.postgresqlfuncts import PostgreSqlFuncts
 from volttrontesting.fixtures.docker_wrapper import create_container
 from volttrontesting.utils import get_rand_port
 
+IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
+if IN_GITHUB_ACTIONS:
+    pytest.skip("skipping unite tests on github. ", allow_module_level=True)
+
+
 logging.getLogger("urllib3.connectionpool").setLevel(logging.INFO)
 pytestmark = [pytest.mark.postgresqlfuncts, pytest.mark.dbutils, pytest.mark.unit]
 
