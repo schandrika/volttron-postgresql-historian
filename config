@@ -5,8 +5,8 @@
             "dbname": "test_historian",
             "host": "127.0.0.1",
             "port": 5432,
-            "user": "historian",
-            "password": "historian"
+            "user": "postgres",
+            "password": "postgres"
         }
     }
 }
